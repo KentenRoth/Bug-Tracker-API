@@ -5,37 +5,37 @@ const TicketSchema = new Schema({
 	created: {
 		type: Number,
 		default: Date.now,
-		trim: true
+		trim: true,
 	},
 	summary: {
 		type: String,
 		required: true,
-		trim: true
+		trim: true,
 	},
 	description: {
 		type: String,
 		required: true,
-		trim: true
+		trim: true,
 	},
 	completed: {
 		type: Boolean,
 		default: false,
-		required: true
+		required: true,
 	},
 	priority: {
 		type: String,
-		required: true
+		required: true,
 	},
 	project: {
 		type: String,
 		required: true,
-		trim: true
+		trim: true,
 	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
-		ref: 'User'
-	}
+		ref: 'Project',
+	},
 });
 
 module.exports = Ticket = mongoose.model('Ticket', TicketSchema);
