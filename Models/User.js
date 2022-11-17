@@ -10,7 +10,13 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 		minlength: 2,
-		trim: true
+		trim: true,
+	},
+	username: {
+		type: String,
+		required: true,
+		minlength: 2,
+		trim: true,
 	},
 	email: {
 		type: String,
@@ -21,33 +27,33 @@ const UserSchema = new Schema({
 			if (!validator.isEmail(value)) {
 				throw new Error('Email is not valid');
 			}
-		}
+		},
 	},
 	password: {
 		type: String,
-		required: true
+		required: true,
 	},
 	resetCode: {
 		type: Number,
-		required: false
+		required: false,
 	},
 	tokens: [
 		{
 			token: {
 				type: String,
-				required: true
-			}
-		}
-	]
+				required: true,
+			},
+		},
+	],
 });
 
 UserSchema.virtual('tickets', {
 	ref: 'Ticket',
 	localField: '_id',
-	foreignField: 'owner'
+	foreignField: 'owner',
 });
 
-UserSchema.methods.createAuthToken = async function() {
+UserSchema.methods.createAuthToken = async function () {
 	const user = this;
 	const token = jwt.sign(
 		{ _id: user._id.toString() },
@@ -60,7 +66,7 @@ UserSchema.methods.createAuthToken = async function() {
 	return token;
 };
 
-UserSchema.methods.toJSON = function() {
+UserSchema.methods.toJSON = function () {
 	const user = this;
 	const userObject = user.toObject();
 
@@ -70,8 +76,8 @@ UserSchema.methods.toJSON = function() {
 	return userObject;
 };
 
-UserSchema.statics.findByCredentials = async (email, password) => {
-	const user = await User.findOne({ email });
+UserSchema.statics.findByCredentials = async (username, password) => {
+	const user = await User.findOne({ username });
 
 	if (!user) {
 		throw new Error('Please check login information');
@@ -86,7 +92,7 @@ UserSchema.statics.findByCredentials = async (email, password) => {
 	return user;
 };
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
 	const user = this;
 
 	if (user.isModified('password')) {
@@ -96,11 +102,9 @@ UserSchema.pre('save', async function(next) {
 	next();
 });
 
-UserSchema.pre('remove', async function(next) {
+UserSchema.pre('remove', async function (next) {
 	const user = this;
-
 	await Ticket.deleteMany({ owner: user._id });
-
 	next();
 });
 
