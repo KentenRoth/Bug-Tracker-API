@@ -2,11 +2,12 @@ const express = require('express');
 require('./mongoose');
 const userRouter = require('./Routers/user');
 const ticketRouter = require('./Routers/ticket');
+const projectRouter = require('./Routers/project');
 
 const app = express();
 const port = process.env.PORT;
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header(
 		'Access-Control-Allow-Methods',
@@ -22,6 +23,7 @@ app.use(function(req, res, next) {
 app.use(express.json());
 app.use(userRouter);
 app.use(ticketRouter);
+app.use(projectRouter);
 
 app.listen(port, () => {
 	console.log(`Server up on ${port}`);

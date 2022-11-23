@@ -1,24 +1,24 @@
 const jwt = require('jsonwebtoken');
-const User = require('../Models/User');
+const Project = require('../Models/Project');
 
-const auth = async (req, res, next) => {
+const projectAuth = async (req, res, next) => {
+	console.log(req);
 	try {
 		const token = req.header('Authorization').replace('Bearer ', '');
 		const decoded = jwt.verify(token, process.env.HIDDEN_SENTENCE);
-		const user = await User.findOne({
+		const project = await Project.findOne({
 			_id: decoded._id,
 			'tokens.token': token,
 		});
-
-		if (!user) {
+		if (!project) {
 			throw new Error();
 		}
 		req.token = token;
-		req.user = user;
+		req.project = project;
 		next();
 	} catch (error) {
 		res.status(401).send({ error: 'No authentication' });
 	}
 };
 
-module.exports = auth;
+module.exports = projectAuth;

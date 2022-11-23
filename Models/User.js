@@ -48,10 +48,22 @@ const UserSchema = new Schema({
 	],
 });
 
-UserSchema.virtual('tickets', {
-	ref: 'Ticket',
+UserSchema.virtual('projects', {
+	ref: 'Project',
 	localField: '_id',
 	foreignField: 'owner',
+});
+
+UserSchema.virtual('admin', {
+	ref: 'Project',
+	localField: '_id',
+	foreignField: 'admins.admin',
+});
+
+UserSchema.virtual('team', {
+	ref: 'Projects',
+	localField: '_id',
+	foreignField: 'team',
 });
 
 UserSchema.methods.createAuthToken = async function () {

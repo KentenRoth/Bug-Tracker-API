@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const jwt = require('jsonwebtoken');
 
 const ProjectSchema = new Schema({
 	created: {
@@ -13,33 +14,38 @@ const ProjectSchema = new Schema({
 		trim: true,
 	},
 	owner: {
-		type: mongoose.SchemaType.Types.ObjectID,
+		type: mongoose.Schema.Types.ObjectId,
 		required: true,
 		ref: 'User',
 	},
-	Admin: [
+	admin: [String],
+	team: [String],
+	tokens: [
 		{
-			person: {
+			token: {
 				type: String,
-				trim: true,
-			},
-		},
-	],
-	Team: [
-		{
-			memeber: {
-				type: String,
-				trim: true,
+				required: true,
 			},
 		},
 	],
 });
 
-// Links tickets to projects
 ProjectSchema.virtual('tickets', {
 	ref: 'Ticket',
 	localField: '_id',
 	foreignField: 'owner',
 });
+
+ProjectSchema.methods.createAuthToken = async function () {
+	const project = this;
+	const token = jwt.sign(
+		{ _id: project._id.toString() },
+		process.env.HIDDEN_SENTENCE
+	);
+	project.tokens = project.tokens.concat({ token });
+	await project.save();
+
+	return token;
+};
 
 module.exports = Project = mongoose.model('Project', ProjectSchema);

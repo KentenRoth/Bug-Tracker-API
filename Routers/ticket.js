@@ -1,12 +1,12 @@
 const express = require('express');
 const router = new express.Router();
-const auth = require('../Middleware/auth');
+const projectAuth = require('../Middleware/projectAuth');
 const Ticket = require('../Models/Ticket');
 
-router.post('/tickets', auth, async (req, res) => {
+router.post('/tickets', projectAuth, async (req, res) => {
 	const ticket = new Ticket({
 		...req.body,
-		owner: req.user._id,
+		owner: req.project._id,
 	});
 
 	try {
@@ -17,7 +17,7 @@ router.post('/tickets', auth, async (req, res) => {
 	}
 });
 
-router.get('/tickets', auth, async (req, res) => {
+router.get('/tickets', projectAuth, async (req, res) => {
 	const match = {};
 
 	if (req.query.completed) {
@@ -25,7 +25,7 @@ router.get('/tickets', auth, async (req, res) => {
 	}
 
 	try {
-		await req.user
+		await req.project
 			.populate({
 				path: 'tickets',
 				match,
@@ -37,11 +37,11 @@ router.get('/tickets', auth, async (req, res) => {
 	}
 });
 
-router.get('/tickets/:id', auth, async (req, res) => {
+router.get('/tickets/:id', projectAuth, async (req, res) => {
 	try {
 		const ticket = await Ticket.findOne({
 			_id: req.params.id,
-			owner: req.user._id,
+			owner: req.project._id,
 		});
 		if (!ticket) {
 			return res.status(404).send();
@@ -52,14 +52,16 @@ router.get('/tickets/:id', auth, async (req, res) => {
 	}
 });
 
-router.patch('/tickets/:id', auth, async (req, res) => {
+router.patch('/tickets/:id', projectAuth, async (req, res) => {
 	const updates = Object.keys(req.body);
 	const allowedUpdates = [
 		'completed',
 		'priority',
-		'project',
 		'summary',
 		'description',
+		'status',
+		'assigned',
+		'assignedTo',
 	];
 	const isValidUpdate = updates.every((update) =>
 		allowedUpdates.includes(update)
@@ -72,7 +74,7 @@ router.patch('/tickets/:id', auth, async (req, res) => {
 	try {
 		const ticket = await Ticket.findOne({
 			_id: req.params.id,
-			owner: req.user._id,
+			owner: req.project._id,
 		});
 
 		if (!ticket) {
@@ -88,11 +90,11 @@ router.patch('/tickets/:id', auth, async (req, res) => {
 	}
 });
 
-router.delete('/tickets/:id', auth, async (req, res) => {
+router.delete('/tickets/:id', projectAuth, async (req, res) => {
 	try {
 		const ticket = await Ticket.findOneAndDelete({
 			_id: req.params.id,
-			owner: req.user._id,
+			owner: req.project._id,
 		});
 		if (!ticket) {
 			return res.status(404).send();

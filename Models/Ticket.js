@@ -26,9 +26,16 @@ const TicketSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	project: {
+	assigned: {
 		type: String,
-		required: true,
+		trim: true,
+	},
+	status: {
+		type: String,
+		trim: true,
+	},
+	assigneedTo: {
+		type: String,
 		trim: true,
 	},
 	owner: {
