@@ -48,7 +48,7 @@ router.get('/tickets/:id', projectAuth, async (req, res) => {
 		}
 		res.send(ticket);
 	} catch (error) {
-		res.status(500).send();
+		res.status(500).send(error);
 	}
 });
 
