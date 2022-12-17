@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const Project = require('../Models/Project');
 
 const projectAuth = async (req, res, next) => {
-	console.log(req);
 	try {
 		const token = req.header('Authorization').replace('Bearer ', '');
 		const decoded = jwt.verify(token, process.env.HIDDEN_SENTENCE);

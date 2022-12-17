@@ -41,7 +41,11 @@ router.get('/projects/:id', auth, async (req, res) => {
 	try {
 		const project = await Project.findOne({
 			_id: req.params.id,
-			owner: req.user._id,
+			$or: [
+				{ owner: req.user._id },
+				{ admin: req.user._id.toString() },
+				{ team: req.user._id.toString() },
+			],
 		});
 		if (!project) {
 			return res.status(404).send();
@@ -66,19 +70,26 @@ router.patch('/projects/:id', auth, async (req, res) => {
 	try {
 		const project = await Project.findOne({
 			_id: req.params.id,
-			owner: req.user._id,
+			$or: [{ owner: req.user._id }, { admin: req.user._id.toString() }],
 		});
 
 		if (!project) {
 			res.status(404).send();
 		}
 
-		updates.forEach((updates) => (project[updates] = req.body[updates]));
+		//TODO still needs to check if user is already in team or admin before adding
+
+		updates.forEach((updates) => {
+			if (updates !== 'title') {
+				return project[updates].push(req.body[updates]);
+			}
+			project[updates] = req.body[updates];
+		});
 		await project.save();
 
 		res.send(project);
 	} catch (error) {
-		res.status(500).send();
+		res.status(500).send(error);
 	}
 });
 
