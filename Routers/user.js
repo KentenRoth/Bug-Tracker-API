@@ -52,6 +52,21 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 	}
 });
 
+router.get('/users/:username', async (req, res) => {
+	try {
+		const user = await User.findOne({
+			username: req.params.username,
+		});
+
+		if (!user) {
+			return res.status(404).send('No User found by that username');
+		}
+		res.send(user);
+	} catch (error) {
+		res.status(500).send(error);
+	}
+});
+
 router.get('/users/me', auth, async (req, res) => {
 	res.send(req.user);
 });
