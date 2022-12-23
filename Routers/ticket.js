@@ -31,7 +31,7 @@ router.get('/tickets', projectAuth, async (req, res) => {
 				match,
 			})
 			.execPopulate();
-		res.send(req.user.tickets);
+		res.send(req.project.tickets);
 	} catch (error) {
 		res.status(500).send(error);
 	}
