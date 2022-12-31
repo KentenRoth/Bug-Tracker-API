@@ -7,6 +7,12 @@ const TicketSchema = new Schema({
 		default: Date.now,
 		trim: true,
 	},
+	title: {
+		type: String,
+		required: true,
+		trim: true,
+		maxlength: 50,
+	},
 	summary: {
 		type: String,
 		required: true,
@@ -34,6 +40,10 @@ const TicketSchema = new Schema({
 	status: {
 		type: String,
 		trim: true,
+	},
+	currentFocus: {
+		type: Boolean,
+		default: false,
 	},
 	assigneedTo: {
 		type: String,
