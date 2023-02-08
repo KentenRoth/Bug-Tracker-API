@@ -58,7 +58,7 @@ router.get('/projects/:id', auth, async (req, res) => {
 
 router.patch('/projects/:id', auth, async (req, res) => {
 	const updates = Object.keys(req.body);
-	const allowedUpdates = ['title', 'admin', 'team'];
+	const allowedUpdates = ['title', 'admins', 'teams'];
 	const isValidUpdate = updates.every((update) =>
 		allowedUpdates.includes(update)
 	);
@@ -77,16 +77,13 @@ router.patch('/projects/:id', auth, async (req, res) => {
 			res.status(404).send();
 		}
 
-		//TODO still needs to check if user is already in team or admin before adding
-
-		updates.forEach((updates) => {
-			if (updates !== 'title') {
-				return project[updates].push(req.body[updates]);
+		updates.forEach((update) => {
+			if (update !== 'title') {
+				return project[update].push(req.body[update]);
 			}
-			project[updates] = req.body[updates];
+			project[update] = req.body[update];
 		});
 		await project.save();
-
 		res.send(project);
 	} catch (error) {
 		res.status(500).send(error);

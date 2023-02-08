@@ -18,8 +18,38 @@ const ProjectSchema = new Schema({
 		required: true,
 		ref: 'User',
 	},
-	admin: [String],
-	team: [String],
+	admins: [
+		{
+			admin: {
+				name: {
+					type: String,
+					trim: true,
+					required: true,
+				},
+				id: {
+					type: String,
+					trim: true,
+					required: true,
+				},
+			},
+		},
+	],
+	teams: [
+		{
+			team: {
+				name: {
+					type: String,
+					trim: true,
+					required: true,
+				},
+				id: {
+					type: String,
+					trim: true,
+					required: true,
+				},
+			},
+		},
+	],
 	tokens: [
 		{
 			token: {
