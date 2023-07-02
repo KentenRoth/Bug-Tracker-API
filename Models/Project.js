@@ -20,33 +20,29 @@ const ProjectSchema = new Schema({
 	},
 	admins: [
 		{
-			admin: {
-				name: {
-					type: String,
-					trim: true,
-					required: true,
-				},
-				id: {
-					type: String,
-					trim: true,
-					required: true,
-				},
+			name: {
+				type: String,
+				trim: true,
+				required: true,
+			},
+			id: {
+				type: String,
+				trim: true,
+				required: true,
 			},
 		},
 	],
 	teams: [
 		{
-			team: {
-				name: {
-					type: String,
-					trim: true,
-					required: true,
-				},
-				id: {
-					type: String,
-					trim: true,
-					required: true,
-				},
+			name: {
+				type: String,
+				trim: true,
+				required: true,
+			},
+			id: {
+				type: String,
+				trim: true,
+				required: true,
 			},
 		},
 	],

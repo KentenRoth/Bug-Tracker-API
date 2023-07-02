@@ -54,6 +54,11 @@ const TicketSchema = new Schema({
 		required: true,
 		ref: 'Project',
 	},
+	order: {
+		type: Number,
+		required: true,
+		default: 0,
+	},
 });
 
 module.exports = Ticket = mongoose.model('Ticket', TicketSchema);

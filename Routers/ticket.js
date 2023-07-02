@@ -52,6 +52,45 @@ router.get('/tickets/:id', projectAuth, async (req, res) => {
 	}
 });
 
+router.patch('/tickets/reorder', projectAuth, async (req, res) => {
+	const { project } = req;
+	const { ticketIds } = req.body;
+
+	try {
+		const tickets = await Ticket.find({ owner: project._id });
+
+		const ticketIndexMap = {};
+		tickets.forEach((ticket, index) => {
+			ticketIndexMap[ticket._id.toString()] = index;
+		});
+
+		const updatedTickets = [];
+		ticketIds.forEach((ticketId, index) => {
+			const ticket = tickets.find((t) => t._id.toString() === ticketId);
+			if (ticket) {
+				ticketIndexMap[ticketId] = index;
+				updatedTickets.push(ticket);
+			}
+		});
+
+		updatedTickets.sort(
+			(a, b) =>
+				ticketIndexMap[a._id.toString()] -
+				ticketIndexMap[b._id.toString()]
+		);
+
+		for (let i = 0; i < updatedTickets.length; i++) {
+			const ticket = updatedTickets[i];
+			ticket.order = i;
+			await ticket.save();
+		}
+
+		res.send(updatedTickets);
+	} catch (error) {
+		res.status(500).send();
+	}
+});
+
 router.patch('/tickets/:id', projectAuth, async (req, res) => {
 	const updates = Object.keys(req.body);
 	const allowedUpdates = [
