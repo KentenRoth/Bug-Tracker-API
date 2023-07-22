@@ -101,6 +101,8 @@ router.patch('/tickets/:id', projectAuth, async (req, res) => {
 		'status',
 		'assigned',
 		'assignedTo',
+		'currentFocus',
+		'order',
 	];
 	const isValidUpdate = updates.every((update) =>
 		allowedUpdates.includes(update)

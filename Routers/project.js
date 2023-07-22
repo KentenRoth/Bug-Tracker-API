@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = new express.Router();
 const auth = require('../Middleware/auth');
 const Project = require('../Models/Project');
@@ -58,7 +59,7 @@ router.get('/projects/:id', auth, async (req, res) => {
 
 router.patch('/projects/:id', auth, async (req, res) => {
 	const updates = Object.keys(req.body);
-	const allowedUpdates = ['title', 'admins', 'teams'];
+	const allowedUpdates = ['title', 'admins', 'teams', 'columns'];
 	const isValidUpdate = updates.every((update) =>
 		allowedUpdates.includes(update)
 	);
@@ -79,13 +80,22 @@ router.patch('/projects/:id', auth, async (req, res) => {
 
 		updates.forEach((update) => {
 			if (update !== 'title') {
-				return project[update].push(req.body[update]);
+				if (update === 'columns') {
+					const updatedColumns = req.body[update].map((column) => {
+						return { _id: mongoose.Types.ObjectId(), ...column };
+					});
+					project[update] = updatedColumns;
+				} else {
+					project[update].push(req.body[update]);
+				}
+			} else {
+				project[update] = req.body[update];
 			}
-			project[update] = req.body[update];
 		});
 		await project.save();
 		res.send(project);
 	} catch (error) {
+		console.log(error);
 		res.status(500).send(error);
 	}
 });

@@ -46,6 +46,24 @@ const ProjectSchema = new Schema({
 			},
 		},
 	],
+	columns: [
+		{
+			_id: {
+				type: mongoose.Schema.Types.ObjectId,
+				default: mongoose.Types.ObjectId,
+			},
+			title: {
+				type: String,
+				trim: true,
+				required: true,
+			},
+			order: {
+				type: Number,
+				default: 0,
+				required: true,
+			},
+		},
+	],
 	tokens: [
 		{
 			token: {
