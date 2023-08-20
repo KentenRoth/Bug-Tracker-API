@@ -23,12 +23,10 @@ const ProjectSchema = new Schema({
 			name: {
 				type: String,
 				trim: true,
-				required: true,
 			},
 			id: {
 				type: String,
 				trim: true,
-				required: true,
 			},
 		},
 	],
@@ -37,12 +35,10 @@ const ProjectSchema = new Schema({
 			name: {
 				type: String,
 				trim: true,
-				required: true,
 			},
 			id: {
 				type: String,
 				trim: true,
-				required: true,
 			},
 		},
 	],
