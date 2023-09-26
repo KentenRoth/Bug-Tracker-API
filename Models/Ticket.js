@@ -46,8 +46,14 @@ const TicketSchema = new Schema({
 		default: false,
 	},
 	assigneedTo: {
-		type: String,
-		trim: true,
+		name: {
+			type: String,
+			trim: true,
+		},
+		_id: {
+			type: String,
+			trim: true,
+		},
 	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,

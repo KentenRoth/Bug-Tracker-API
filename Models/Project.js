@@ -24,7 +24,7 @@ const ProjectSchema = new Schema({
 				type: String,
 				trim: true,
 			},
-			id: {
+			_id: {
 				type: String,
 				trim: true,
 			},
@@ -36,7 +36,7 @@ const ProjectSchema = new Schema({
 				type: String,
 				trim: true,
 			},
-			id: {
+			_id: {
 				type: String,
 				trim: true,
 			},
